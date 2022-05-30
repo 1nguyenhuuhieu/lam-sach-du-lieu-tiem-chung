@@ -29,7 +29,7 @@ submit_btn = driver.find_element_by_xpath("/html/body/div/div/div/div/button[1]"
 submit_btn.click()
 time.sleep(5)
 
-xa = 'camson'
+xa = 'thitran'
 dest_filename = 'Thong_ke_xac_minh_doi_tuong_' + xa + ' - Copy.xlsx'
 tmp_filename = 'copy_tmp'+ xa + ' - Copy.xlsx'
 backup_filename = 'copy_backup'+ xa + ' - Copy.xlsx'
@@ -78,8 +78,11 @@ for i in tqdm(range(7, ws.max_row+1)):
             save_btn = driver.find_element_by_id('btnSave')
             save_btn.click()
             time.sleep(1)
-
-            ws.cell(i,1).value = "Done"
+            try:
+                duplicate = driver.find_element_by_xpath('/html/body/div[11]/div/div/div[1]/h4')
+                ws.cell(i,1).value = "Duplicate"
+            except:
+                ws.cell(i,1).value = "Done"
         else:
             ws.cell(i,1).value = "Failed"
         wb.save(tmp_filename)
