@@ -8,7 +8,12 @@ from tqdm import tqdm
 username = "na_anhson"
 password = "Hieu@TTYT123"
 
-driver = webdriver.Chrome()
+ds_xa_huyenanhson_string =" thị trấn Anh Sơn , Bình Sơn, Cẩm Sơn, Cao Sơn, Đỉnh Sơn, Đức Sơn, Hoa Sơn, Hội Sơn, Hùng Sơn, Khai Sơn, Lạng Sơn, Lĩnh Sơn, Long Sơn, Phúc Sơn, Tam Sơn, Tào Sơn, Thạch Sơn, Thành Sơn, Thọ Sơn, Tường Sơn, Vĩnh Sơn"
+ds_xa_huyenanhson = ds_xa_huyenanhson_string.split(",")
+clear_ds_xa = [x.strip() for x in ds_xa_huyenanhson]
+
+
+driver = webdriver.Firefox()
 driver.get("https://tiemchungcovid19.moh.gov.vn/")
 time.sleep(5)
 
@@ -50,7 +55,6 @@ for i in tqdm(range(7, ws.max_row+1)):
 
             search_name_input.send_keys(search_name)
             search_phone_input.send_keys(search_phone)
-        
 
             search_btn = driver.find_element_by_id('btnAdvancedSearch')
             clear = driver.find_element_by_xpath('//*[@id="select2-slDonViTao-container"]/span')
@@ -75,6 +79,23 @@ for i in tqdm(range(7, ws.max_row+1)):
             cccd_input.clear()
 
             cccd_input.send_keys(cccd_key.value)
+
+            current_xa = ws.cell(i,2).value
+
+            if current_xa != "Không tìm thấy" and current_xa != None and current_xa != "nhiều hơn 1 kết quả":
+                for xa in clear_ds_xa:
+                    if xa in current_xa:
+                        driver.find_element_by_xpath('//*[@id="thongTinCoBan"]/div[5]/div[1]/span/span[1]/span/span[2]').click()
+                        driver.find_element_by_xpath('/html/body/span/span/span[1]/input').send_keys("Nghệ An")
+                        driver.find_element_by_xpath('/html/body/span/span/span[1]/input').send_keys(Keys.ENTER)
+                        driver.find_element_by_xpath('//*[@id="thongTinCoBan"]/div[5]/div[2]/span/span[1]/span/span[2]').click()
+                        driver.find_element_by_xpath('/html/body/span/span/span[1]/input').send_keys("Anh Sơn")
+                        driver.find_element_by_xpath('/html/body/span/span/span[1]/input').send_keys(Keys.ENTER)
+                        driver.find_element_by_xpath('//*[@id="thongTinCoBan"]/div[5]/div[3]/span/span[1]/span/span[2]').click()
+                        driver.find_element_by_xpath('/html/body/span/span/span[1]/input').send_keys(xa)
+                        driver.find_element_by_xpath('/html/body/span/span/span[1]/input').send_keys(Keys.ENTER)
+                        driver.find_element_by_id('btnApDungChoTamTru').click()
+
             save_btn = driver.find_element_by_id('btnSave')
             save_btn.click()
             time.sleep(1)
